@@ -1,0 +1,7 @@
+stages:
+  download_data:
+    cmd: python src/data/download_data.py
+    params:
+    - kaggle_dataset
+    outs:
+    - data/raw/IMDB Dataset.csv

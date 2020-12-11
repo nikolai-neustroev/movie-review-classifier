@@ -1,0 +1,9 @@
+download_data:
+  cmd: python src/data/download_data.py
+  params:
+    params.yaml:
+      kaggle_dataset: lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
+  outs:
+  - path: data/raw/IMDB Dataset.csv
+    md5: 308443a50e5c993e7b8a1cdb95750026
+    size: 66212309
