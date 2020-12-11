@@ -1,7 +1,20 @@
 stages:
+
   download_data:
     cmd: python src/data/download_data.py
     params:
-    - kaggle_dataset
+      - kaggle_dataset
     outs:
-    - data/raw/IMDB Dataset.csv
+      - data/raw/IMDB Dataset.csv
+
+  train_test_split:
+    cmd: python src/features/train_test_split.py
+    deps:
+      - data/raw/IMDB Dataset.csv
+    params:
+      - file_path
+      - test_size
+      - split_seed
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv

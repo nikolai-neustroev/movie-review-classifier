@@ -7,3 +7,21 @@ download_data:
   - path: data/raw/IMDB Dataset.csv
     md5: 308443a50e5c993e7b8a1cdb95750026
     size: 66212309
+train_test_split:
+  cmd: python src/features/train_test_split.py
+  deps:
+  - path: data/raw/IMDB Dataset.csv
+    md5: 308443a50e5c993e7b8a1cdb95750026
+    size: 66212309
+  params:
+    params.yaml:
+      file_path: data/raw/IMDB Dataset.csv
+      split_seed: 42
+      test_size: 0.2
+  outs:
+  - path: data/processed/test.csv
+    md5: d626b6b16f542d90437846ffea43a2fb
+    size: 13283637
+  - path: data/processed/train.csv
+    md5: ff6d17be7ecb66e30f2e907adce00378
+    size: 52928689
