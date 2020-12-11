@@ -18,3 +18,20 @@ stages:
     outs:
       - data/processed/train.csv
       - data/processed/test.csv
+
+  train_lstm:
+    cmd: python src/models/lstm.py
+    deps:
+      - data/processed/train.csv
+      - data/processed/test.csv
+    params:
+      - vocab_size
+      - embedding_dim
+      - max_length
+      - trunc_type
+      - oov_tok
+      - lstm_units
+      - num_epochs
+    outs:
+      - models/lstm/
+      - data/fit_history/lstm_history/

@@ -3,3 +3,11 @@ kaggle_dataset: 'lakshmi25npathi/imdb-dataset-of-50k-movie-reviews'
 file_path: 'data/raw/IMDB Dataset.csv'
 test_size: 0.2
 split_seed: 42
+
+vocab_size: 10000
+embedding_dim: 16
+max_length: 120
+trunc_type: 'post'
+oov_tok: "<OOV>"
+lstm_units: 32
+num_epochs: 3
