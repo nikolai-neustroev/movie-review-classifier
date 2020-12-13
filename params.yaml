@@ -11,3 +11,5 @@ trunc_type: 'post'
 oov_tok: "<OOV>"
 lstm_units: 32
 num_epochs: 3
+
+dense_units: 64

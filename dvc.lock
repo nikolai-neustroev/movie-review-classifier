@@ -52,3 +52,30 @@ train_lstm:
     md5: e74f007e711852eec2457292bc5369e0.dir
     size: 4669091
     nfiles: 3
+train_dense:
+  cmd: python src/models/dense.py
+  deps:
+  - path: data/processed/test.csv
+    md5: d626b6b16f542d90437846ffea43a2fb
+    size: 13283637
+  - path: data/processed/train.csv
+    md5: ff6d17be7ecb66e30f2e907adce00378
+    size: 52928689
+  params:
+    params.yaml:
+      dense_units: 64
+      embedding_dim: 16
+      max_length: 120
+      num_epochs: 3
+      oov_tok: <OOV>
+      trunc_type: post
+      vocab_size: 10000
+  outs:
+  - path: data/fit_history/dense_history/
+    md5: 80276235d07162d1410c8ac177c8c2c2.dir
+    size: 254
+    nfiles: 1
+  - path: models/dense/
+    md5: 5a3a4bdbabbe19e2e22b306cdcad5cee.dir
+    size: 2569851
+    nfiles: 3

@@ -1,4 +1,3 @@
-import os
 from time import time
 
 import tensorflow as tf
@@ -6,7 +5,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pandas as pd
 
-import src.utils.utils as utils
+from src.utils.utils import read_params, export_model, save_history
 
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
@@ -43,13 +42,8 @@ def build_model(vocab_size, embedding_dim, max_length, lstm_units):
     return model
 
 
-def export_model(model, timestamp, base_path="models/lstm/"):
-    path = os.path.join(base_path, str(timestamp))
-    tf.saved_model.save(model, path)
-
-
 if __name__ == '__main__':
-    params = utils.read_params()
+    params = read_params()
     timestamp = int(time())
 
     training_sentences, training_labels = custom_read_csv('data/processed/train.csv')
@@ -83,10 +77,5 @@ if __name__ == '__main__':
         # TODO: Add checkpoint and early stopping callbacks
     )
 
-    hist_df = pd.DataFrame(history.history)
-    directory = 'data/fit_history/lstm_history'
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    hist_df.to_json(f'{directory}/{timestamp}.json')
-
-    export_model(model, timestamp)
+    save_history(history, timestamp, 'data/fit_history/lstm_history')
+    export_model(model, timestamp, base_path="models/lstm/")
