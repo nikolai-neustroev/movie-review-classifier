@@ -38,8 +38,9 @@ def build_model(vocab_size, embedding_dim, max_length, units):
         tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length),
         tf.keras.layers.Dense(units, activation='relu'),
         tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(6, activation='relu'),
-        tf.keras.layers.Dense(1, activation='sigmoid')
+        tf.keras.layers.Dense(units, activation='relu'),
+        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.GlobalAveragePooling1D()
     ])
     return model
 
@@ -49,8 +50,10 @@ def build_export_model(vocab_size, embedding_dim, max_length, sentences, lstm_un
     vectorize_layer.adapt(sentences)
     model = build_model(vocab_size, embedding_dim, max_length, lstm_units)
     export_model = tf.keras.Sequential([
+        tf.keras.Input(shape=(1,), dtype=tf.string),
         vectorize_layer,
-        model
+        model,
+        tf.keras.layers.Dense(1, activation='sigmoid')
     ])
     export_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     return export_model
