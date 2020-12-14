@@ -45,10 +45,37 @@ train_lstm:
       vocab_size: 10000
   outs:
   - path: data/fit_history/lstm_history/
-    md5: d1c809ccf50ceb75355fbd2f5c051f4f.dir
-    size: 255
+    md5: 5cd140a7e26e7b291e62b5ef79bcc35d.dir
+    size: 256
     nfiles: 1
   - path: models/lstm/
-    md5: e74f007e711852eec2457292bc5369e0.dir
-    size: 4669091
+    md5: e78bba983c363335105153a2f1092eed.dir
+    size: 4669831
+    nfiles: 3
+train_dense:
+  cmd: python src/models/dense.py
+  deps:
+  - path: data/processed/test.csv
+    md5: d626b6b16f542d90437846ffea43a2fb
+    size: 13283637
+  - path: data/processed/train.csv
+    md5: ff6d17be7ecb66e30f2e907adce00378
+    size: 52928689
+  params:
+    params.yaml:
+      dense_units: 64
+      embedding_dim: 16
+      max_length: 120
+      num_epochs: 3
+      oov_tok: <OOV>
+      trunc_type: post
+      vocab_size: 10000
+  outs:
+  - path: data/fit_history/dense_history/
+    md5: a8e3486129c0b47e58c92e3c656f44e6.dir
+    size: 256
+    nfiles: 1
+  - path: models/dense/
+    md5: 49d92ec35b41078339a06e08bb984dd0.dir
+    size: 2564643
     nfiles: 3
