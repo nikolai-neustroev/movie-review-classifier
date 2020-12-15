@@ -7,9 +7,6 @@ import pandas as pd
 
 from src.utils.utils import read_params, export_model, save_history
 
-physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
-
 
 def custom_read_csv(file_path):
     df = pd.read_csv(file_path)
@@ -43,6 +40,9 @@ def build_model(vocab_size, embedding_dim, max_length, lstm_units):
 
 
 if __name__ == '__main__':
+    physical_devices = tf.config.list_physical_devices('GPU')
+    tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+
     params = read_params()
     timestamp = int(time())
 
