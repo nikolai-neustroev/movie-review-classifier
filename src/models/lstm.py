@@ -5,7 +5,9 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pandas as pd
 
-from src.utils.utils import read_params, export_model, save_history
+from src.utils.save_history import save_history
+from src.utils.export_model import export_model
+from src.utils.read_params import read_params
 
 
 def custom_read_csv(file_path):

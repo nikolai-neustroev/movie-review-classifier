@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-import src.utils.utils as utils
+from src.utils.read_params import read_params
 
 
 def custom_train_test_split(file_path, test_size, split_seed):
@@ -11,7 +11,7 @@ def custom_train_test_split(file_path, test_size, split_seed):
 
 
 if __name__ == '__main__':
-    params = utils.read_params()
+    params = read_params()
 
     train_df, test_df = custom_train_test_split(
         params['file_path'],
