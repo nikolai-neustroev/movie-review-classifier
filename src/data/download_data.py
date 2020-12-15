@@ -1,6 +1,6 @@
 import kaggle
 
-from src.utils.utils import read_params
+from src.utils.read_params import read_params
 
 
 def get_data(dataset, path):
