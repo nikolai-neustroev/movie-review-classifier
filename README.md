@@ -3,6 +3,13 @@ The text sentiment classification service.
 This project handles a full ML pipeline from raw data download to serving a gRPC API with DVC and TensorFlow Serving.
 Try it yourself!
 You may need Kaggle API token to access the data (https://www.kaggle.com/docs/api#authentication).
+## Prerequisites
+Make sure you have installed all the following prerequisites on your machine:
+
+- git (tested on version 2.17.1)
+- virtualenv (tested on version 15.1.0)
+- dvc (tested on version 1.10.2)
+- docker (tested on version 19.03.13, build 4484c46d9d)
 
 ## Getting started
 ### Step 0. Clone this repository
