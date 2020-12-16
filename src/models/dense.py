@@ -3,18 +3,11 @@ import string
 from time import time
 
 import tensorflow as tf
-import pandas as pd
 
 from src.utils.save_history import save_history
 from src.utils.export_model import export_model
 from src.utils.read_params import read_params
-
-
-def custom_read_csv(file_path):
-    df = pd.read_csv(file_path)
-    sentences = df.iloc[:, 0].to_numpy()
-    labels = df.iloc[:, 1].astype('category').cat.codes.to_numpy()
-    return sentences, labels
+from src.utils.custom_read_csv import custom_read_csv
 
 
 def custom_standardization(input_data):
