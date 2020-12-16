@@ -7,14 +7,47 @@ import tensorflow as tf
 from tensorflow_serving.apis import prediction_service_pb2_grpc, predict_pb2, get_model_metadata_pb2
 
 
-def get_stub(host='127.0.0.1', port='8500'):
-    channel = grpc.insecure_channel('127.0.0.1:8500')
+def get_stub(host='127.0.0.1', port='8500') -> prediction_service_pb2_grpc.PredictionServiceStub:
+    """Returns prediction API with certain host and port.
+
+    Parameters
+    ----------
+    host : str
+    port : str
+
+    Returns
+    -------
+    stub : prediction_service_pb2_grpc.PredictionServiceStub
+        Prediction API.
+
+    """
+    channel = grpc.insecure_channel(host + ":" + port)
     stub = prediction_service_pb2_grpc.PredictionServiceStub(channel)
     return stub
 
 
-def get_model_prediction(model_input, stub, model_name):
-    """ no error handling at all, just poc"""
+def get_model_prediction(
+            model_input: list,
+            stub: prediction_service_pb2_grpc.PredictionServiceStub,
+            model_name: str
+        ) -> float:
+    """Requests message for prediction API. No error handling at all, just poc.
+
+    Parameters
+    ----------
+    model_input : list
+        Data given to the input layer of the model.
+    stub : prediction_service_pb2_grpc.PredictionServiceStub
+        Prediction API.
+    model_name : str
+        Name of the model.
+
+    Returns
+    -------
+    float
+        Prediction of the model.
+
+    """
     request = predict_pb2.PredictRequest()
     request.model_spec.name = model_name
     request.inputs['input_1'].CopyFrom(tf.make_tensor_proto(model_input))
@@ -22,7 +55,21 @@ def get_model_prediction(model_input, stub, model_name):
     return response.result().outputs["dense_2"].float_val
 
 
-def get_model_version(model_name, stub):
+def get_model_version(model_name: str, stub: prediction_service_pb2_grpc.PredictionServiceStub) -> str:
+    """Returns the version of the model.
+
+    Parameters
+    ----------
+    model_name : str
+    stub : prediction_service_pb2_grpc.PredictionServiceStub
+        Prediction API.
+
+    Returns
+    -------
+    str
+        Version of the model.
+
+    """
     request = get_model_metadata_pb2.GetModelMetadataRequest()
     request.model_spec.name = model_name
     request.metadata_field.append("signature_def")

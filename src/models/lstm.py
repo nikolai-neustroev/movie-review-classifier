@@ -1,5 +1,6 @@
 from time import time
 
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -10,19 +11,83 @@ from src.utils.read_params import read_params
 from src.utils.custom_read_csv import custom_read_csv
 
 
-def get_tokenizer(training_sentences, vocab_size, oov_tok):
+def get_tokenizer(training_sentences: np.ndarray, vocab_size: int, oov_tok: str) -> Tokenizer:
+    """Returns Tokenizer fitted on given text.
+
+    Parameters
+    ----------
+    training_sentences : np.ndarray
+        Numpy array of texts on which the tokenizer will be fitted.
+    vocab_size : int
+        Size of the tokenizer vocabulary.
+    oov_tok : str
+        Token for the out-of-vocabulary words.
+
+    Returns
+    -------
+    tokenizer : Tokenizer
+        Tokenizer fitted on given text.
+
+    """
     tokenizer = Tokenizer(num_words=vocab_size, oov_token=oov_tok)
     tokenizer.fit_on_texts(training_sentences)
     return tokenizer
 
 
-def get_padded_seq(tokenizer, sentences, max_length, trunc_type):
+def get_padded_seq(
+        tokenizer: Tokenizer,
+        sentences: np.ndarray,
+        max_length: int,
+        trunc_type: str
+    ) -> np.ndarray:
+    """Tokenizes texts and pads sequences to the same length.
+
+    Parameters
+    ----------
+    tokenizer : Tokenizer
+        Tokenizer used to make sequences.
+    sentences : np.ndarray
+        Numpy array of texts.
+    max_length : int
+        Maximum length of all sequences.
+    trunc_type : str
+        Pad either before or after each sequence.
+
+    Returns
+    -------
+    padded : np.ndarray
+        Padded sequence.
+    """
     sequences = tokenizer.texts_to_sequences(sentences)
     padded = pad_sequences(sequences, maxlen=max_length, truncating=trunc_type)
     return padded
 
 
-def build_model(vocab_size, embedding_dim, max_length, lstm_units):
+def build_model(
+        vocab_size: int,
+        embedding_dim: int,
+        max_length: int,
+        lstm_units: int
+    ) -> tf.python.keras.engine.sequential.Sequential:
+    """Defining the model architecture.
+
+    Parameters
+    ----------
+    vocab_size : int
+        Size of the vocabulary.
+    embedding_dim : int
+        Dimension of the dense embedding.
+    max_length : int
+        Length of input sequences.
+    lstm_units : int
+        Number of units in LSTM layers.
+
+    Returns
+    -------
+    model : tf.python.keras.engine.sequential.Sequential
+        Sequential model with LSTM layers.
+
+    """
     model = tf.keras.Sequential([
         tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length),
         tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(lstm_units)),
