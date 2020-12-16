@@ -2,6 +2,7 @@ import re
 import string
 from time import time
 
+import numpy as np
 import tensorflow as tf
 
 from src.utils.save_history import save_history
@@ -10,7 +11,20 @@ from src.utils.read_params import read_params
 from src.utils.custom_read_csv import custom_read_csv
 
 
-def custom_standardization(input_data):
+def custom_standardization(input_data: tf.Tensor) -> tf.Tensor:
+    """Standardization preprocessing pipeline for input data.
+
+    Parameters
+    ----------
+    input_data : tf.Tensor
+        Raw input data.
+
+    Returns
+    -------
+    tf.Tensor
+        Preprocessed input data.
+
+    """
     lowercase = tf.strings.lower(input_data)
     stripped_html = tf.strings.regex_replace(lowercase, '<br />', ' ')
     return tf.strings.regex_replace(stripped_html,
@@ -18,7 +32,23 @@ def custom_standardization(input_data):
                                     '')
 
 
-def get_vectorize_layer(max_features=10000, sequence_length=250):
+def get_vectorize_layer(max_features=10000, sequence_length=250) \
+        -> tf.keras.layers.experimental.preprocessing.TextVectorization:
+    """Transforms a batch of strings into either a list of token indices or a dense representation.
+
+    Parameters
+    ----------
+    max_features : int
+        The maximum size of the vocabulary for this layer.
+    sequence_length : int
+        Dimension padded or truncated to exactly sequence_length values.
+
+    Returns
+    -------
+    vectorize_layer : tf.keras.layers.experimental.preprocessing.TextVectorization
+        Text vectorization layer.
+
+    """
     vectorize_layer = tf.keras.layers.experimental.preprocessing.TextVectorization(
         standardize=custom_standardization,
         max_tokens=max_features,
@@ -28,7 +58,26 @@ def get_vectorize_layer(max_features=10000, sequence_length=250):
     return vectorize_layer
 
 
-def build_model(vocab_size, embedding_dim, max_length, units):
+def build_model(vocab_size: int, embedding_dim: int, max_length: int, units: int) -> tf.keras.Sequential:
+    """Builds core model.
+
+    Parameters
+    ----------
+    vocab_size : int
+        Size of the vocabulary.
+    embedding_dim : int
+        Dimension of the dense embedding.
+    max_length : int
+        Length of input sequences.
+    units : int
+        Number of units in Dense layers.
+
+    Returns
+    -------
+    model : tf.python.keras.engine.sequential.Sequential
+        Sequential model with Dense layers.
+
+    """
     model = tf.keras.Sequential([
         tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length),
         tf.keras.layers.Dense(units, activation='relu'),
@@ -40,7 +89,32 @@ def build_model(vocab_size, embedding_dim, max_length, units):
     return model
 
 
-def build_export_model(vocab_size, embedding_dim, max_length, sentences, lstm_units):
+def build_export_model(
+        vocab_size: int,
+        embedding_dim: int,
+        max_length: int,
+        sentences: np.ndarray,
+        lstm_units: int
+    ) -> tf.keras.Sequential:
+    """Builds model with input and output layers.
+
+    Parameters
+    ----------
+    vocab_size : int
+        Size of the vocabulary.
+    embedding_dim : int
+        Dimension of the dense embedding.
+    max_length : int
+        Length of input sequences.
+    sentences : np.ndarray
+        Data to adapt the input layer.
+    lstm_units : int
+        Number of units in Dense layers.
+
+    Returns
+    -------
+
+    """
     vectorize_layer = get_vectorize_layer(vocab_size, max_length)
     vectorize_layer.adapt(sentences)
     model = build_model(vocab_size, embedding_dim, max_length, lstm_units)
